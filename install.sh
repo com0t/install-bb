@@ -25,6 +25,8 @@ if [[ -z `which go` ]]; then
 else
 	echo "[+] GoLang exists"
 fi
+## Install pip3 and pip
+sudo apt install -y python-pip python3-pip
 
 # Install tool
 if [[ -z `which git` ]]; then
@@ -45,7 +47,7 @@ echo "[+] Install dirsearch"
 git clone https://github.com/maurosoria/dirsearch.git
 sed -i 's,/usr/bin/env python3,'"`which python3`," dirsearch/dirsearch.py
 echo "Create sym link dirsearch"
-sudo ln -s $HOME/tools/dirsearch/dirsearch.py /usr/local/bin
+sudo ln -s $HOME/tools/dirsearch/dirsearch.py /usr/local/bin/dirsearch
 ## Install sqlmap
 echo "[+] Install sqlmap"
 sudo apt install -y sqlmap
@@ -61,3 +63,12 @@ go get -u github.com/tomnomnom/assetfinder
 ## Install httprobe
 echo "[+] Install httprobe"
 go get -u github.com/tomnomnom/httprobe
+## Install paramspider
+echo '[+] Install paramspider'
+git clone https://github.com/devanshbatham/ParamSpider
+cd ParamSpider
+pip3 install -r requirements.txt
+sed -i '1s,^,'"`which python3`"'\n,' paramspider.py
+chmod +x paramspider.py
+sudo ln -s $HOME/tools/ParamSpider/paramspider.py /usr/local/bin/paramspider
+cd ..
