@@ -1,0 +1,2 @@
+# install-bb
+install bb
