@@ -2,7 +2,7 @@
 root_dir=`pwd`
 ## Check apt packet
 if [[ -z `which apt` ]]; then
-	echo "[!] apt packet not found" | tee -a  $root_dir/install-bb.log
+	echo "[!] apt packet not found" | tee  $root_dir/install-bb.log
 	exit 0
 fi
 ## Install golang
