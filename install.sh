@@ -107,4 +107,4 @@ if [[ -z `which paramspider` ]]; then
 	cd ..
 else
 	echo "[+] paramspider exists" | tee >> install-bb.log
-fi
+fi 
