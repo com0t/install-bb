@@ -1,7 +1,7 @@
 # Install environment
 ## Check apt packet
 if [[ -z `which apt` ]]; then
-	echo "[!] apt packet not found" | tee >> install-bb.log
+	echo "[!] apt packet not found" | tee > install-bb.log
 	exit 0
 fi
 ## Install golang
@@ -31,6 +31,7 @@ if [[ -z `which pip3` ]]; then
 else
 	echo "[+] pip3 exists" | tee >> install-bb.log
 fi
+
 if [[ -z `which pip` ]]; then
 	sudo apt install -y python-pip
 else
@@ -61,7 +62,7 @@ else
 	echo "[+] dirsearch exists" | tee >> install-bb.log
 fi
 ## Install sqlmap
-if [[ -z `which sqlmap` ]];then
+if [[ -z `which sqlmap` ]]; then
 	echo "[+] Install sqlmap" | tee >> install-bb.log
 	sudo apt install -y sqlmap
 else
@@ -107,4 +108,4 @@ if [[ -z `which paramspider` ]]; then
 	cd ..
 else
 	echo "[+] paramspider exists" | tee >> install-bb.log
-fi 
+fi
