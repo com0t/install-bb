@@ -43,32 +43,60 @@ fi
 
 cd $HOME/tools
 ## Install dirsearch
-echo "[+] Install dirsearch"
-git clone https://github.com/maurosoria/dirsearch.git
-sed -i 's,/usr/bin/env python3,'"`which python3`," dirsearch/dirsearch.py
-echo "Create sym link dirsearch"
-sudo ln -s $HOME/tools/dirsearch/dirsearch.py /usr/local/bin/dirsearch
+if [[ -z `which dirsearch` ]]; then
+	echo "[+] Install dirsearch"
+	git clone https://github.com/maurosoria/dirsearch.git
+	sed -i 's,/usr/bin/env python3,'"`which python3`," dirsearch/dirsearch.py
+	echo "Create sym link dirsearch"
+	sudo ln -s $HOME/tools/dirsearch/dirsearch.py /usr/local/bin/dirsearch
+else
+	echo "[+] dirsearch exists"
+fi
 ## Install sqlmap
-echo "[+] Install sqlmap"
-sudo apt install -y sqlmap
+if [[ -z `which sqlmap` ]];then
+	echo "[+] Install sqlmap"
+	sudo apt install -y sqlmap
+else
+	echo "[+] sqlmap exists"
+fi
 ## Install nmap
-echo "[+] Install nmap"
-sudo apt install -y nmap
+if [[ -z `which nmap` ]]; then
+	echo "[+] Install nmap"
+	sudo apt install -y nmap
+else
+	echo "[+] nmap exists"
+fi
 ## Install amass
-echo "[+] Install amass"
-sudo snap install amass
+if [[ -z `which amass` ]]; then
+	echo "[+] Install amass"
+	sudo snap install amass
+else
+	echo "[+] amass exists"
+fi
 ## Install assetfinder
-echo "[+] Install assetfinder"
-go get -u github.com/tomnomnom/assetfinder
+if [[ -z `which assetfinder` ]]; then
+	echo "[+] Install assetfinder"
+	go get -u github.com/tomnomnom/assetfinder
+else
+	echo "[+] assetfinder exists"
+fi
 ## Install httprobe
-echo "[+] Install httprobe"
-go get -u github.com/tomnomnom/httprobe
+if [[ -z `which httprobe` ]]; then
+	echo "[+] Install httprobe"
+	go get -u github.com/tomnomnom/httprobe
+else
+	echo "[+] httprobe exists"
+fi
 ## Install paramspider
-echo '[+] Install paramspider'
-git clone https://github.com/devanshbatham/ParamSpider
-cd ParamSpider
-pip3 install -r requirements.txt
-sed -i '1s,^,'"`which python3`"'\n,' paramspider.py
-chmod +x paramspider.py
-sudo ln -s $HOME/tools/ParamSpider/paramspider.py /usr/local/bin/paramspider
-cd ..
+if [[ -z `which paramspider` ]]; then
+	echo '[+] Install paramspider'
+	git clone https://github.com/devanshbatham/ParamSpider
+	cd ParamSpider
+	pip3 install -r requirements.txt
+	sed -i '1s,^,'"`which python3`"'\n,' paramspider.py
+	chmod +x paramspider.py
+	sudo ln -s $HOME/tools/ParamSpider/paramspider.py /usr/local/bin/paramspider
+	cd ..
+else
+	echo "[+] paramspider exists"
+fi
