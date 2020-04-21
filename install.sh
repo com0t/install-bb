@@ -17,9 +17,15 @@ if [[ -z `which go` ]]; then
 		sudo touch $HOME/.profile
 	fi
 	sudo tar -C /usr/local -xzf $filego
-	sudo echo "export GOROOT=/usr/local/go" >> $HOME/.profile
-	sudo echo "export GOPATH=$HOME/go" >> $HOME/.profile
-	sudo echo "export PATH=\"$PATH:$GOPATH/bin:$GOROOT/bin\"" >> $HOME/.profile
+	if [[ -z "$GOROOT" ]]; then
+		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/.profile
+	fi
+	if [[ -z "$GOPATH" ]]; then
+		sudo echo 'export GOPATH="$HOME/go"' >> $HOME/.profile
+	fi
+	if [[ "$GOROOT/bin" != *"$PATH"* ]]; then
+		sudo echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> $HOME/.profile
+	fi
 	source $HOME/.profile
 	rm -f $filego
 else
