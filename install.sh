@@ -18,6 +18,9 @@ if [[ -z `which go` ]]; then
 		sudo touch $HOME/.profile
 	fi
 	sudo tar -C /usr/local -xzf $filego
+	export GOROOT="/usr/local/go"
+	export GOPATH="$HOME/go"
+	export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
 	if [[ -z "`cat $HOME/.profile | grep GOROOT`" ]]; then
 		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/.profile
 	fi
@@ -116,4 +119,3 @@ if [[ -z `which paramspider` ]]; then
 else
 	echo "[+] paramspider exists" | tee -a  $root_dir/install-bb.log
 fi
-source $HOME/.profile
