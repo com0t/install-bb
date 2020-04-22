@@ -15,15 +15,6 @@ if [[ -z `which go` ]]; then
 		exit 0
 	fi
 	sudo tar -C /usr/local -xzf $filego
-	if [[ -z `env | grep GOROOT` ]]; then
-		export GOROOT="/usr/local/go"
-	fi
-	if [[ -z `env | grep GOPATH` ]]; then
-		export GOPATH="$HOME/go"
-	fi
-	if [[ -z `env | grep "$GOROOT/bin"` && -z `env | grep "$GOPATH/bin"` ]]; then
-		export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
-	fi
 	if [[ -z "`cat $HOME/.profile | grep GOROOT`" ]]; then
 		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/.profile
 	fi
