@@ -14,13 +14,16 @@ if [[ -z `which go` ]]; then
 		echo "Don't downloaded $filego" | tee -a  $root_dir/install-bb.log
 		exit 0
 	fi
-	if [[ ! -f "$HOME/.profile" ]]; then
-		sudo touch $HOME/.profile
-	fi
 	sudo tar -C /usr/local -xzf $filego
-	export GOROOT="/usr/local/go"
-	export GOPATH="$HOME/go"
-	export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
+	if [[ -z `env | grep GOROOT` ]]; then
+		export GOROOT="/usr/local/go"
+	fi
+	if [[ -z `env | grep GOPATH` ]]; then
+		export GOPATH="$HOME/go"
+	fi
+	if [[ -z `env | grep "$GOROOT/bin"` && -z `env | grep "$GOPATH/bin"` ]]; then
+		export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
+	fi
 	if [[ -z "`cat $HOME/.profile | grep GOROOT`" ]]; then
 		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/.profile
 	fi
