@@ -1,6 +1,6 @@
 # Install environment
 root_dir=`pwd`
-sudo apt updpate -y
+sudo apt update -y
 ## Check apt packet
 if [[ -z `which apt` ]]; then
 	echo "[!] apt packet not found" | tee  $root_dir/install-bb.log
