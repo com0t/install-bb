@@ -40,13 +40,13 @@ if [[ -z `which go` ]]; then
 	sudo tar -C /usr/local -xzf $filego
 
 	if [[ -z "`cat $HOME/.profile | grep GOROOT`" ]]; then
-		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/.bashrc
+		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/.profile
 	fi
 	if [[ -z "`cat $HOME/.profile | grep GOPATH`" ]]; then
-		sudo echo 'export GOPATH="$HOME/go"' >> $HOME/.bashrc
+		sudo echo 'export GOPATH="$HOME/go"' >> $HOME/.profile
 	fi
 	if [[ -z "`cat $HOME/.profile | grep GOROOT/bin`" ]]; then
-		sudo echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> $HOME/.bashrc
+		sudo echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> $HOME/.profile
 	fi
 	rm -f $filego
 else
@@ -57,7 +57,7 @@ if [[ ! -d "$HOME/tools" ]]; then
 	mkdir $HOME/tools
 fi
 
-source $HOME/.bashrc
+source $HOME/.profile
 cd $HOME/tools
 
 echo 'Insstalling Nuclei'
@@ -125,10 +125,12 @@ echo 'Installing Massdns'
 git clone https://github.com/blechschmidt/massdns.git
 cd ~/tools/massdns
 make
+sudo cp massdns/bin/massdns /usr/local/bin/
 echo 'done'
 
 
 echo 'Downloading Seclists '
+cd ~/tools/
 git clone https://github.com/danielmiessler/SecLists.git
 cd ~/tools/SecLists/Discovery/DNS/
 ## THIS FILE BREAKS MASSDNS AND NEEDS TO BE CLEANED
