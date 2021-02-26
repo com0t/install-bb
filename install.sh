@@ -125,8 +125,16 @@ echo 'Installing Massdns'
 git clone https://github.com/blechschmidt/massdns.git
 cd ~/tools/massdns
 make
-sudo cp massdns/bin/massdns /usr/local/bin/
+sudo cp ~/tools/massdns/bin/massdns /usr/local/bin/
 echo 'done'
+
+echo 'Installing Masscan'
+cd ~/tools
+git clone https://github.com/robertdavidgraham/masscan
+cd ~/tools/masscan
+make
+sudo cp ~/tools/masscan/bin/masscan /usr/local/bin/
+echo'done'
 
 
 echo 'Downloading Seclists '
