@@ -2,7 +2,7 @@
 
 ## Check apt packet
 if [[ -z `which apt` ]]; then
-	echo "[!] apt packet not found" | tee  $root_dir/install-bb.log
+	echo "[!] apt packet not found"
 	exit 1
 fi
 
