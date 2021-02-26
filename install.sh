@@ -29,6 +29,13 @@ sudo apt-get install -y xargs
 sudo apt-get install -y sqlmap nmap awscli
 
 
+if [[ -z "`cat $HOME/.profile | grep 'alias profile'`" ]]; then
+	sudo echo 'alias profile="vim ~/.bugprofile"' >> $HOME/.profile
+fi
+if [[ -z "`cat $HOME/.profile | grep 'alias bugprofile'`" ]]; then
+	sudo echo 'alias profile="source ~/.bugprofile"' >> $HOME/.profile
+fi
+
 ## Install golang
 if [[ -z `which go` ]]; then
 	filego="go1.16.linux-amd64.tar.gz"
@@ -146,6 +153,16 @@ cd ~/tools/SecLists/Discovery/DNS/
 cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt
 echo 'done'
 
+
+echo 'Downloading bugprofile'
+cd ~
+wget https://raw.githubusercontent.com/com0t/bugprofile/main/.bugprofile
+echo 'done'
+
+echo 'Downloading Autobot-bb'
+cd ~
+git clone https://github.com/com0t/autobot-bb.git
+echo 'done'
 
 echo 'Remove install script'
 cd $pwd
