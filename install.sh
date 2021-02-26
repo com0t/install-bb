@@ -144,3 +144,8 @@ cd ~/tools/SecLists/Discovery/DNS/
 ## THIS FILE BREAKS MASSDNS AND NEEDS TO BE CLEANED
 cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt
 echo 'done'
+
+
+echo 'Remove install script'
+rm -rf install.sh
+echo 'done'
