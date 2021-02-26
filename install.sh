@@ -135,7 +135,7 @@ git clone https://github.com/robertdavidgraham/masscan
 cd ~/tools/masscan
 make
 sudo cp ~/tools/masscan/bin/masscan /usr/local/bin/
-echo'done'
+echo 'done'
 
 
 echo 'Downloading Seclists '
