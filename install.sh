@@ -33,7 +33,7 @@ if [[ -z "`cat $HOME/.profile | grep 'alias profile'`" ]]; then
 	sudo echo 'alias profile="vim ~/.bugprofile"' >> $HOME/.profile
 fi
 if [[ -z "`cat $HOME/.profile | grep 'alias bugprofile'`" ]]; then
-	sudo echo 'alias profile="source ~/.bugprofile"' >> $HOME/.profile
+	sudo echo 'alias bugprofile="source ~/.bugprofile"' >> $HOME/.profile
 fi
 
 ## Install golang
