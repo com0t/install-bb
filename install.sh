@@ -48,7 +48,6 @@ if [[ -z `which go` ]]; then
 	if [[ -z "`cat $HOME/.profile | grep GOROOT/bin`" ]]; then
 		sudo echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> $HOME/.bashrc
 	fi
-	source $HOME/.bashrc
 	rm -f $filego
 else
 	echo "[+] GoLang exists"
@@ -57,6 +56,9 @@ fi
 if [[ ! -d "$HOME/tools" ]]; then
 	mkdir $HOME/tools
 fi
+
+source $HOME/.bashrc
+cd $HOME/tools
 
 echo 'Insstalling Nuclei'
 GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
