@@ -97,7 +97,11 @@ echo 'done'
 
 echo 'Installing Gf'
 go get -u github.com/tomnomnom/gf
-echo 'Install Gf-Patern'
+echo 'done'
+
+
+echo 'Downloading Gf-Patern'
+rm -rf ~/.gf
 git clone https://github.com/1ndianl33t/Gf-Patterns.git
 mv Gf-Patterns ~/.gf
 echo 'done'
@@ -115,7 +119,11 @@ echo 'done'
 
 
 echo 'Installing Aquatone'
-go get github.com/michenriksen/aquatone
+aquatone=''
+wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/$aquatone
+unzip aquatone_linux_amd64_1.7.0.zip
+rm -rf README.md LICENSE.txt
+sudo mv aquatone /usr/local/bin 
 echo 'done'
 
 
