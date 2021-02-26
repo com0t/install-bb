@@ -57,6 +57,7 @@ if [[ ! -d "$HOME/tools" ]]; then
 	mkdir $HOME/tools
 fi
 
+pwd=`pwd`
 source $HOME/.profile
 cd $HOME/tools
 
@@ -147,5 +148,6 @@ echo 'done'
 
 
 echo 'Remove install script'
+cd $pwd
 rm -rf install.sh
 echo 'done'
