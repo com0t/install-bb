@@ -156,6 +156,7 @@ echo 'done'
 
 echo 'Downloading bugprofile'
 cd ~
+rm -rf .bugprofile
 wget https://raw.githubusercontent.com/com0t/bugprofile/main/.bugprofile
 echo 'done'
 
