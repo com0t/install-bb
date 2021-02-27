@@ -164,8 +164,7 @@ echo 'done'
 
 echo 'Downloading bugprofile'
 cd ~
-rm -rf .bugprofile
-wget https://raw.githubusercontent.com/com0t/bugprofile/main/.bugprofile
+wget https://raw.githubusercontent.com/com0t/bugprofile/main/.bugprofile -O .bugprofile
 echo 'done'
 
 echo 'Downloading Autobot-bb'
