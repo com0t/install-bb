@@ -10,20 +10,9 @@ fi
 sudo apt-get -y update
 sudo apt-get -y upgrade
 
-sudo apt-get install -y libcurl4-openssl-dev
-sudo apt-get install -y libssl-dev
-sudo apt-get install -y jq
-sudo apt-get install -y ruby-full ruby
-sudo apt-get install -y libcurl4-openssl-dev libxml2 libxml2-dev libxslt1-dev ruby-dev build-essential libgmp-dev zlib1g-dev
-sudo apt-get install -y build-essential libssl-dev libffi-dev python-dev
-sudo apt-get install -y python-setuptools
-sudo apt-get install -y libldns-dev
-sudo apt-get install -y python3-pip
-sudo apt-get install -y python-pip
-sudo apt-get install -y python-dnspython
-sudo apt-get install -y git
-sudo apt-get install -y rename
-sudo apt-get install -y xargs
+sudo apt-get install -y jq python3-pip
+# Install packet for wpscan
+apt install curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ gcc libreadline6-dev libssl-dev libyaml-dev liblzma-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config ruby ruby-bundler ruby-dev libsqlite3-dev sqlite3 -y
 
 ## Install Tools
 sudo apt-get install -y sqlmap nmap awscli
@@ -38,8 +27,8 @@ fi
 
 ## Install golang
 if [[ -z `which go` ]]; then
-	filego="go1.16.linux-amd64.tar.gz"
-	wget "https://dl.google.com/go/$filego"
+	filego="go1.17.2.linux-amd64.tar.gz"
+	wget "https://golang.org/dl/$filego"
 	if [[ ! -f $filego ]]; then
 		echo "Don't downloaded $filego"
 		exit 1
@@ -119,7 +108,7 @@ echo 'done'
 
 
 echo 'Installing Aquatone'
-aquatone=''
+aquatone='aquatone_linux_amd64_1.7.0.zip'
 wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/$aquatone
 unzip aquatone_linux_amd64_1.7.0.zip
 rm -rf README.md LICENSE.txt
