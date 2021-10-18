@@ -12,17 +12,19 @@ sudo apt-get -y upgrade
 
 sudo apt-get install -y jq python3-pip
 # Install packet for wpscan
-apt install curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ gcc libreadline6-dev libssl-dev libyaml-dev liblzma-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config ruby ruby-bundler ruby-dev libsqlite3-dev sqlite3 -y
+sudo apt install curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ gcc libreadline6-dev libssl-dev libyaml-dev liblzma-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config ruby ruby-bundler ruby-dev libsqlite3-dev sqlite3 -y
 
 ## Install Tools
 sudo apt-get install -y sqlmap nmap awscli
 
+# check current shell
+[[ "$0" == *"zsh"*]] && profile='.zshrc' || profile='.bashrc'
 
-if [[ -z "`cat $HOME/.profile | grep 'alias profile'`" ]]; then
-	sudo echo 'alias profile="vim ~/.bugprofile"' >> $HOME/.profile
+if [[ -z "`cat $HOME/$profile | grep 'alias profile'`" ]]; then
+	sudo echo 'alias profile="vim ~/.bugprofile"' >> $HOME/$profile
 fi
-if [[ -z "`cat $HOME/.profile | grep 'alias bugprofile'`" ]]; then
-	sudo echo 'alias bugprofile="source ~/.bugprofile"' >> $HOME/.profile
+if [[ -z "`cat $HOME/$profile | grep 'alias bugprofile'`" ]]; then
+	sudo echo 'alias bugprofile="source ~/.bugprofile"' >> $HOME/$profile
 fi
 
 ## Install golang
@@ -35,14 +37,14 @@ if [[ -z `which go` ]]; then
 	fi
 	sudo tar -C /usr/local -xzf $filego
 
-	if [[ -z "`cat $HOME/.profile | grep GOROOT`" ]]; then
-		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/.profile
+	if [[ -z "`cat $HOME/$profile | grep GOROOT`" ]]; then
+		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/$profile
 	fi
-	if [[ -z "`cat $HOME/.profile | grep GOPATH`" ]]; then
-		sudo echo 'export GOPATH="$HOME/go"' >> $HOME/.profile
+	if [[ -z "`cat $HOME/$profile | grep GOPATH`" ]]; then
+		sudo echo 'export GOPATH="$HOME/go"' >> $HOME/$profile
 	fi
-	if [[ -z "`cat $HOME/.profile | grep GOROOT/bin`" ]]; then
-		sudo echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> $HOME/.profile
+	if [[ -z "`cat $HOME/$profile | grep GOROOT/bin`" ]]; then
+		sudo echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> $HOME/$profile
 	fi
 	rm -f $filego
 else
@@ -54,7 +56,7 @@ if [[ ! -d "$HOME/tools" ]]; then
 fi
 
 pwd=`pwd`
-source $HOME/.profile
+source $HOME/$profile
 cd $HOME/tools
 
 echo 'Insstalling Nuclei'
@@ -165,3 +167,6 @@ echo 'Remove install script'
 cd $pwd
 rm -rf install.sh
 echo 'done'
+
+# Active enviroment
+source ~/.bugprofile
