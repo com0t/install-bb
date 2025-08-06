@@ -142,6 +142,15 @@ else
     check_status "Httpx installation"
 fi
 
+# Cài đặt katana
+if command -v katana &>/dev/null; then
+    echo "[+] Katana already installed"
+else
+    echo 'Installing katana'
+    CGO_ENABLED=1 go install github.com/projectdiscovery/katana/cmd/katana@latest &>/dev/null
+    check_status "katana installation"
+fi
+
 # Cài đặt Subfinder
 if command -v subfinder &>/dev/null; then
     echo "[+] Subfinder already installed"
@@ -241,6 +250,54 @@ else
     echo 'Installing Dirsearch'
     git clone https://github.com/maurosoria/dirsearch.git &>/dev/null
     check_status "Cloning Dirsearch repository"
+    cd ~/tools/dirsearch
+    python3 -m pip install -r requirements.txt &>/dev/null
+    check_status "Installing Dirsearch requirements"
+    # Kiểm tra nếu alias đã tồn tại
+    if grep -q "alias dirsearch=" "$HOME/$SHELL_CONFIG"; then
+        echo "[+] Dirsearch alias already exists"
+    else
+        echo 'alias dirsearch="python3 ~/tools/dirsearch/dirsearch.py "' >> "$HOME/$SHELL_CONFIG"
+        check_status "Adding Dirsearch alias to shell configuration"
+    fi
+fi
+
+# Cài đặt Linkfinder
+if [[ -d ~/tools/linkfinder ]]; then
+    echo "[+] Linkfinder already installed"
+else
+    echo 'Installing Linkfinder'
+    git clone https://github.com/GerbenJavado/LinkFinder.git linkfinder &>/dev/null
+    check_status "Cloning Linkfinder repository"
+    cd ~/tools/linkfinder || { echo "[!] Failed to change to ~/tools/linkfinder"; exit 1; }
+    python3 -m pip install -r requirements.txt &>/dev/null
+    check_status "Installing Linkfinder requirements"
+    # Kiểm tra nếu alias đã tồn tại
+    if grep -q "alias linkfinder=" "$HOME/$SHELL_CONFIG"; then
+        echo "[+] Linkfinder alias already exists"
+    else
+        echo 'alias linkfinder="python3 ~/tools/linkfinder/linkfinder.py "' >> "$HOME/$SHELL_CONFIG"
+        check_status "Adding Linkfinder alias to shell configuration"
+    fi
+fi
+
+# Cài đặt SecretFinder
+if [[ -d ~/tools/secretfinder ]]; then
+    echo "[+] SecretFinder already installed"
+else
+    echo 'Installing SecretFinder'
+    git clone https://github.com/m4ll0k/SecretFinder.git secretfinder &>/dev/null
+    check_status "Cloning SecretFinder repository"
+    cd ~/tools/secretfinder || { echo "[!] Failed to change to ~/tools/secretfinder"; exit 1; }
+    python3 -m pip install -r requirements.txt &>/dev/null
+    check_status "Installing SecretFinder requirements"
+    # Kiểm tra nếu alias đã tồn tại
+    if grep -q "alias secretfinder=" "$HOME/$SHELL_CONFIG"; then
+        echo "[+] SecretFinder alias already exists"
+    else
+        echo 'alias secretfinder="python3 ~/tools/secretfinder/SecretFinder.py "' >> "$HOME/$SHELL_CONFIG"
+        check_status "Adding SecretFinder alias to shell configuration"
+    fi
 fi
 
 # Cài đặt Massdns
@@ -286,3 +343,4 @@ else
 fi
 
 rm -f install.sh
+check_status 'Remove install script'
