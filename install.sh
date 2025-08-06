@@ -91,14 +91,14 @@ if ! command -v go &>/dev/null; then
 
 		FILE_GO="$(echo $filego|sed 's/\/dl\///g')"
 		LINK_DOWNLOAD="https://golang.org$filego"
-		#wget -q $LINK_DOWNLOAD 
+		wget -q $LINK_DOWNLOAD 
     check_status "Downloading GoLang $LINK_DOWNLOAD"
-		sudo rm -rf /usr/local/go && sudo tar -C /usr/local $FILE_GO &>/dev/null
-		check_status "Extracting GoLang"
-		rm -f "$FILE_GO" dl.html
-		check_status "Cleaning up GoLang download files"
+    sudo rm -rf /usr/local/go && sudo tar -C /usr/local $FILE_GO &>/dev/null
+    check_status "Extracting GoLang"
+    rm -f "$FILE_GO" dl.html
+    check_status "Cleaning up GoLang download files"
 
-		echo 'export GOROOT="/usr/local/go"' >> "$HOME/$SHELL_CONFIG"
+    echo 'export GOROOT="/usr/local/go"' >> "$HOME/$SHELL_CONFIG"
     echo 'export GOPATH="$HOME/go"' >> "$HOME/$SHELL_CONFIG"
     echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> "$HOME/$SHELL_CONFIG"
     check_status "Adding GoLang environment variables"
