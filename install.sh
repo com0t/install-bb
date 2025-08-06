@@ -102,13 +102,13 @@ if ! command -v go &>/dev/null; then
     echo 'export GOPATH="$HOME/go"' >> "$HOME/$SHELL_CONFIG"
     echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> "$HOME/$SHELL_CONFIG"
     check_status "Adding GoLang environment variables"
+    export GOROOT="/usr/local/go"
+    export GOPATH="$HOME/go"
+    export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
+    check_status "Setting GoLang environment variables"
 else
     echo "[+] GoLang exists"
 fi
-
-# Source tệp cấu hình shell
-source "$HOME/$SHELL_CONFIG" &>/dev/null
-check_status "Sourcing shell configuration"
 
 # Chuyển đến thư mục tools
 if [[ -d "$HOME/tools" ]]; then
@@ -344,3 +344,9 @@ else
     cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt &>/dev/null
     check_status "Cleaning dns-Jhaddix.txt"
 fi
+
+# in ra thông tin cài đặt
+echo "Installation completed successfully!"
+# In ra câu lệnh source tệp cấu hình shell
+echo "Please run the following command to apply changes:"
+echo "source $HOME/$SHELL_CONFIG"
