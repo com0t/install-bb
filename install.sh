@@ -89,12 +89,12 @@ if ! command -v go &>/dev/null; then
         exit 1
     fi
 
-		FILE_GO="$(echo $filego|sed 's/\/dl\///g')"
-		LINK_DOWNLOAD="https://golang.org$filego"
-		wget -q $LINK_DOWNLOAD 
+    FILE_GO="$(echo $filego|sed 's/\/dl\///g')"
+    LINK_DOWNLOAD="https://golang.org$filego"
+    wget -q $LINK_DOWNLOAD 
     check_status "Downloading GoLang $LINK_DOWNLOAD"
-    sudo rm -rf /usr/local/go && sudo tar -C /usr/local $FILE_GO &>/dev/null
-    check_status "Extracting GoLang"
+    sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf $FILE_GO &>/dev/null
+    check_status "Extracting GoLang $FILE_GO"
     rm -f "$FILE_GO" dl.html
     check_status "Cleaning up GoLang download files"
 
