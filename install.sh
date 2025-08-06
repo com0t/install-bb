@@ -345,8 +345,48 @@ else
     check_status "Cleaning dns-Jhaddix.txt"
 fi
 
+# Cài đặt Gitleaks
+if command -v gitleaks &>/dev/null; then
+    echo "[+] Gitleaks already installed"
+else
+    echo 'Installing Gitleaks'
+    go install github.com/zricethezav/gitleaks/v8@latest &>/dev/null
+    check_status "Gitleaks installation"
+fi
+
+# Cài đặt Gitrob
+if command -v gitrob &>/dev/null; then
+    echo "[+] Gitrob already installed"
+else
+    echo 'Installing Gitrob'
+    go install github.com/michenriksen/gitrob@latest &>/dev/null
+    check_status "Gitrob installation"
+fi
+
 # in ra thông tin cài đặt
 echo "Installation completed successfully!"
 # In ra câu lệnh source tệp cấu hình shell
 echo "Please run the following command to apply changes:"
 echo "source $HOME/$SHELL_CONFIG"
+
+# In ra danh sách các công cụ đã cài đặt
+echo "Installed tools:"
+echo "- Nuclei"
+echo "- Httpx"
+echo "- Katana"
+echo "- Subfinder"
+echo "- Assetfinder"
+echo "- Waybackurls"
+echo "- Gf"
+echo "- Subjack"
+echo "- Chromium"
+echo "- Aquatone"
+echo "- Wpscan"
+echo "- Dirsearch"
+echo "- Linkfinder"
+echo "- SecretFinder"
+echo "- Massdns"
+echo "- Masscan"
+echo "- SecLists"
+echo "- Gitleaks"
+echo "- Gitrob"
