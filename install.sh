@@ -60,7 +60,7 @@ sudo apt-get install -y curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ g
 check_status "wpscan dependencies installation"
 
 # Cài đặt các công cụ
-sudo apt-get install -y sqlmap nmap awscli &>/dev/null
+sudo apt-get install -y sqlmap nmap &>/dev/null
 check_status "sqlmap, nmap, awscli installation"
 
 # Kiểm tra shell hiện tại
