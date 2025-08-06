@@ -247,6 +247,7 @@ fi
 if [[ -d ~/tools/dirsearch ]]; then
     echo "[+] Dirsearch already installed"
 else
+    cd ~/tools || { echo "[!] Failed to change to ~/tools"; exit 1; }
     echo 'Installing Dirsearch'
     git clone https://github.com/maurosoria/dirsearch.git &>/dev/null
     check_status "Cloning Dirsearch repository"
@@ -266,6 +267,7 @@ fi
 if [[ -d ~/tools/linkfinder ]]; then
     echo "[+] Linkfinder already installed"
 else
+    cd ~/tools || { echo "[!] Failed to change to ~/tools"; exit 1; }
     echo 'Installing Linkfinder'
     git clone https://github.com/GerbenJavado/LinkFinder.git linkfinder &>/dev/null
     check_status "Cloning Linkfinder repository"
@@ -285,6 +287,7 @@ fi
 if [[ -d ~/tools/secretfinder ]]; then
     echo "[+] SecretFinder already installed"
 else
+    cd ~/tools || { echo "[!] Failed to change to ~/tools"; exit 1; }
     echo 'Installing SecretFinder'
     git clone https://github.com/m4ll0k/SecretFinder.git secretfinder &>/dev/null
     check_status "Cloning SecretFinder repository"
@@ -341,6 +344,3 @@ else
     cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt &>/dev/null
     check_status "Cleaning dns-Jhaddix.txt"
 fi
-
-rm -f install.sh
-check_status 'Remove install script'
