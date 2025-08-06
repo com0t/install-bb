@@ -1,172 +1,288 @@
 #!/bin/bash
 
-## Check apt packet
-if [[ -z `which apt` ]]; then
-	echo "[!] apt packet not found"
-	exit 1
+# Hàm để in trạng thái thành công hoặc thất bại
+check_status() {
+    if [[ $? -eq 0 ]]; then
+        echo "[+] $1 succeeded"
+    else
+        echo "[!] $1 failed"
+        exit 1
+    fi
+}
+
+# Kiểm tra quyền sudo
+if ! sudo -l &>/dev/null; then
+    echo "[!] This script requires sudo privileges"
+    exit 1
+fi
+check_status "Sudo privilege check"
+
+# Kiểm tra kết nối mạng
+if ! ping -c 1 google.com &>/dev/null; then
+    echo "[!] No internet connection"
+    exit 1
+fi
+check_status "Internet connection check"
+
+# Kiểm tra hệ điều hành
+if ! grep -qi "ubuntu\|debian" /etc/os-release; then
+    echo "[!] This script only supports Ubuntu/Debian-based systems"
+    exit 1
+fi
+check_status "OS compatibility check"
+
+# Kiểm tra apt
+if ! command -v apt &>/dev/null; then
+    echo "[!] apt packet not found"
+    exit 1
+fi
+check_status "apt package check"
+
+# Kiểm tra snap
+if ! command -v snap &>/dev/null; then
+    echo "[+] Installing snapd..."
+    sudo apt-get install -y snapd &>/dev/null
+    check_status "snapd installation"
 fi
 
-# Install environment
-sudo apt-get -y update
-sudo apt-get -y upgrade
+# Cập nhật và cài đặt gói
+sudo apt-get -y update &>/dev/null
+check_status "apt-get update"
 
-sudo apt-get install -y jq python3-pip
-# Install packet for wpscan
-sudo apt install curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ gcc libreadline6-dev libssl-dev libyaml-dev liblzma-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config ruby ruby-bundler ruby-dev libsqlite3-dev sqlite3 -y
+sudo apt-get -y upgrade &>/dev/null
+check_status "apt-get upgrade"
 
-## Install Tools
-sudo apt-get install -y sqlmap nmap awscli
+sudo apt-get install -y jq python3-pip &>/dev/null
+check_status "jq and python3-pip installation"
 
-# check current shell
-[[ "$0" == *"zsh"*]] && profile='.zshrc' || profile='.bashrc'
+# Cài đặt các gói cho wpscan
+sudo apt-get install -y curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ gcc libreadline6-dev libssl-dev libyaml-dev liblzma-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config ruby ruby-bundler ruby-dev libsqlite3-dev sqlite3 &>/dev/null
+check_status "wpscan dependencies installation"
 
-if [[ -z "`cat $HOME/$profile | grep 'alias profile'`" ]]; then
-	sudo echo 'alias profile="vim ~/.bugprofile"' >> $HOME/$profile
-fi
-if [[ -z "`cat $HOME/$profile | grep 'alias bugprofile'`" ]]; then
-	sudo echo 'alias bugprofile="source ~/.bugprofile"' >> $HOME/$profile
-fi
+# Cài đặt các công cụ
+sudo apt-get install -y sqlmap nmap awscli &>/dev/null
+check_status "sqlmap, nmap, awscli installation"
 
-## Install golang
-if [[ -z `which go` ]]; then
-	filego="go1.17.2.linux-amd64.tar.gz"
-	wget "https://golang.org/dl/$filego"
-	if [[ ! -f $filego ]]; then
-		echo "Don't downloaded $filego"
-		exit 1
-	fi
-	sudo tar -C /usr/local -xzf $filego
+# Kiểm tra shell hiện tại
+case "$SHELL" in
+    */zsh) SHELL_CONFIG='.zshrc' ;;
+    */bash) SHELL_CONFIG='.bashrc' ;;
+    *) echo "[!] Unsupported shell: $SHELL. Defaulting to .bashrc"; SHELL_CONFIG='.bashrc' ;;
+esac
+check_status "Shell detection SHELL_CONFIG=${SHELL_CONFIG}"
 
-	if [[ -z "`cat $HOME/$profile | grep GOROOT`" ]]; then
-		sudo echo 'export GOROOT="/usr/local/go"' >> $HOME/$profile
-	fi
-	if [[ -z "`cat $HOME/$profile | grep GOPATH`" ]]; then
-		sudo echo 'export GOPATH="$HOME/go"' >> $HOME/$profile
-	fi
-	if [[ -z "`cat $HOME/$profile | grep GOROOT/bin`" ]]; then
-		sudo echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> $HOME/$profile
-	fi
-	rm -f $filego
+# Cài đặt GoLang
+if ! command -v go &>/dev/null; then
+    curl -ks https://go.dev/dl/ -o dl.html
+
+    arch=$(uname -m)
+    case "$arch" in
+        x86_64) filego=$(grep -Eo 'class="download downloadBox" href="(.+linux-amd64.tar.gz)"' dl.html | sed -E 's/class="download downloadBox" href="(.+)"/\1/' | head -n 1) ;;
+        aarch64) filego=$(grep -Eo 'class="download downloadBox" href="(.+linux-arm64.tar.gz)"' dl.html | sed -E 's/class="download downloadBox" href="(.+)"/\1/' | head -n 1) ;;
+        *) echo "[!] Unsupported architecture: $arch"; exit 1 ;;
+    esac
+    check_status "Architecture detection $arch"
+
+    if [[ -z "$filego" ]]; then
+        echo "[!] Failed to find GoLang download link"
+        rm -f dl.html
+        exit 1
+    fi
+
+		FILE_GO="$(echo $filego|sed 's/\/dl\///g')"
+		LINK_DOWNLOAD="https://golang.org$filego"
+		#wget -q $LINK_DOWNLOAD 
+    check_status "Downloading GoLang $LINK_DOWNLOAD"
+		sudo rm -rf /usr/local/go && sudo tar -C /usr/local $FILE_GO &>/dev/null
+		check_status "Extracting GoLang"
+		rm -f "$FILE_GO" dl.html
+		check_status "Cleaning up GoLang download files"
+
+		echo 'export GOROOT="/usr/local/go"' >> "$HOME/$SHELL_CONFIG"
+    echo 'export GOPATH="$HOME/go"' >> "$HOME/$SHELL_CONFIG"
+    echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> "$HOME/$SHELL_CONFIG"
+    check_status "Adding GoLang environment variables"
 else
-	echo "[+] GoLang exists"
+    echo "[+] GoLang exists"
 fi
 
-if [[ ! -d "$HOME/tools" ]]; then
-	mkdir $HOME/tools
+# Source tệp cấu hình shell
+source "$HOME/$SHELL_CONFIG" &>/dev/null
+check_status "Sourcing shell configuration"
+
+# Chuyển đến thư mục tools
+if [[ -d "$HOME/tools" ]]; then
+		echo "[+] Tools directory already exists"
+else
+		mkdir -p "$HOME/tools" &>/dev/null
+		check_status "Creating tools directory"
 fi
 
-pwd=`pwd`
-source $HOME/$profile
-cd $HOME/tools
+cd "$HOME/tools" || { echo "[!] Failed to change to $HOME/tools"; exit 1; }
+check_status "Changing to tools directory"
 
-echo 'Insstalling Nuclei'
-GO111MODULE=on go get -v github.com/projectdiscovery/nuclei/v2/cmd/nuclei
-echo 'Update template'
-nuclei -update-templates
-echo 'done'
+# Cài đặt Nuclei
+if command -v nuclei &>/dev/null; then
+    echo "[+] Nuclei already installed"
+else
+    echo 'Installing Nuclei'
+    go install github.com/projectdiscovery/nuclei/v2/cmd/nuclei@latest &>/dev/null
+    check_status "Nuclei installation"
+    echo 'Updating Nuclei templates'
+    nuclei -update-templates &>/dev/null
+    check_status "Nuclei template update"
+fi
 
+# Cài đặt Httpx
+if command -v httpx &>/dev/null; then
+    echo "[+] Httpx already installed"
+else
+    echo 'Installing Httpx'
+    go install github.com/projectdiscovery/httpx/cmd/httpx@latest &>/dev/null
+    check_status "Httpx installation"
+fi
 
-echo 'Installing Httpx'
-GO111MODULE=on go get -v github.com/projectdiscovery/httpx/cmd/httpx
-echo 'done'
+# Cài đặt Subfinder
+if command -v subfinder &>/dev/null; then
+    echo "[+] Subfinder already installed"
+else
+    echo 'Installing Subfinder'
+    go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest &>/dev/null
+    check_status "Subfinder installation"
+fi
 
+# Cài đặt Assetfinder
+if command -v assetfinder &>/dev/null; then
+    echo "[+] Assetfinder already installed"
+else
+    echo 'Installing Assetfinder'
+    go install github.com/tomnomnom/assetfinder@latest &>/dev/null
+    check_status "Assetfinder installation"
+fi
 
-echo 'Installing Subfinder'
-GO111MODULE=on go get -v github.com/projectdiscovery/subfinder/v2/cmd/subfinder
-echo 'done'
+# Cài đặt Waybackurls
+if command -v waybackurls &>/dev/null; then
+    echo "[+] Waybackurls already installed"
+else
+    echo 'Installing Waybackurls'
+    go install github.com/tomnomnom/waybackurls@latest &>/dev/null
+    check_status "Waybackurls installation"
+fi
 
+# Cài đặt Gf
+if command -v gf &>/dev/null; then
+    echo "[+] Gf already installed"
+else
+    echo 'Installing Gf'
+    go install github.com/tomnomnom/gf@latest &>/dev/null
+    check_status "Gf installation"
+fi
 
-echo 'Installing Assetfinder'
-go get -u github.com/tomnomnom/assetfinder
-echo 'done'
+# Tải Gf-Patterns
+if [[ -d ~/.gf ]]; then
+    echo "[+] Gf-Patterns already exists"
+else
+    echo 'Downloading Gf-Patterns'
+    git clone https://github.com/1ndianl33t/Gf-Patterns.git &>/dev/null
+    check_status "Cloning Gf-Patterns"
+    mv Gf-Patterns ~/.gf &>/dev/null
+    check_status "Moving Gf-Patterns to ~/.gf"
+fi
 
+# Cài đặt Subjack
+if command -v subjack &>/dev/null; then
+    echo "[+] Subjack already installed"
+else
+    echo 'Installing Subjack'
+    go install github.com/haccer/subjack@latest &>/dev/null
+    check_status "Subjack installation"
+    git clone https://github.com/haccer/subjack.git &>/dev/null
+    check_status "Cloning Subjack repository"
+fi
 
-echo 'Installing Waybackurls'
-go get github.com/tomnomnom/waybackurls
-echo 'done'
+# Cài đặt Chromium
+if command -v chromium &>/dev/null; then
+    echo "[+] Chromium already installed"
+else
+    echo 'Installing Chromium'
+    sudo snap install chromium &>/dev/null
+    check_status "Chromium installation"
+fi
 
+# Cài đặt Aquatone
+if command -v aquatone &>/dev/null; then
+    echo "[+] Aquatone already installed"
+else
+    echo 'Installing Aquatone'
+    aquatone='aquatone_linux_amd64_1.7.0.zip'
+    wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/$aquatone &>/dev/null
+    check_status "Downloading Aquatone"
+    unzip "$aquatone" &>/dev/null
+    check_status "Unzipping Aquatone"
+    rm -f README.md LICENSE.txt &>/dev/null
+    check_status "Cleaning up Aquatone files"
+    sudo mv aquatone /usr/local/bin/ &>/dev/null
+    check_status "Moving Aquatone to /usr/local/bin"
+fi
 
-echo 'Installing Gf'
-go get -u github.com/tomnomnom/gf
-echo 'done'
+# Cài đặt Wpscan
+if command -v wpscan &>/dev/null; then
+    echo "[+] Wpscan already installed"
+else
+    echo 'Installing Wpscan'
+    sudo gem install wpscan &>/dev/null
+    check_status "Wpscan installation"
+fi
 
+# Cài đặt Dirsearch
+if [[ -d ~/tools/dirsearch ]]; then
+    echo "[+] Dirsearch already installed"
+else
+    echo 'Installing Dirsearch'
+    git clone https://github.com/maurosoria/dirsearch.git &>/dev/null
+    check_status "Cloning Dirsearch repository"
+fi
 
-echo 'Downloading Gf-Patern'
-rm -rf ~/.gf
-git clone https://github.com/1ndianl33t/Gf-Patterns.git
-mv Gf-Patterns ~/.gf
-echo 'done'
+# Cài đặt Massdns
+if command -v massdns &>/dev/null; then
+    echo "[+] Massdns already installed"
+else
+    echo 'Installing Massdns'
+    git clone https://github.com/blechschmidt/massdns.git &>/dev/null
+    check_status "Cloning Massdns repository"
+    cd ~/tools/massdns || { echo "[!] Failed to change to ~/tools/massdns"; exit 1; }
+    make &>/dev/null
+    check_status "Building Massdns"
+    sudo cp ~/tools/massdns/bin/massdns /usr/local/bin/ &>/dev/null
+    check_status "Installing Massdns to /usr/local/bin"
+fi
 
+# Cài đặt Masscan
+if command -v masscan &>/dev/null; then
+    echo "[+] Masscan already installed"
+else
+    echo 'Installing Masscan'
+    cd ~/tools || { echo "[!] Failed to change to ~/tools"; exit 1; }
+    git clone https://github.com/robertdavidgraham/masscan &>/dev/null
+    check_status "Cloning Masscan repository"
+    cd ~/tools/masscan || { echo "[!] Failed to change to ~/tools/masscan"; exit 1; }
+    make &>/dev/null
+    check_status "Building Masscan"
+    sudo cp ~/tools/masscan/bin/masscan /usr/local/bin/ &>/dev/null
+    check_status "Installing Masscan to /usr/local/bin"
+fi
 
-echo 'Installing Subjack'
-go get github.com/haccer/subjack
-git clone https://github.com/haccer/subjack.git
-echo 'done'
+# Tải SecLists
+if [[ -d ~/tools/SecLists ]]; then
+    echo "[+] SecLists already installed"
+else
+    echo 'Downloading SecLists'
+    cd ~/tools || { echo "[!] Failed to change to ~/tools"; exit 1; }
+    git clone https://github.com/danielmiessler/SecLists.git &>/dev/null
+    check_status "Cloning SecLists repository"
+    cd ~/tools/SecLists/Discovery/DNS/ || { echo "[!] Failed to change to ~/tools/SecLists/Discovery/DNS"; exit 1; }
+    cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt &>/dev/null
+    check_status "Cleaning dns-Jhaddix.txt"
+fi
 
-
-echo 'Installing Chromium'
-sudo snap install chromium
-echo 'done'
-
-
-echo 'Installing Aquatone'
-aquatone='aquatone_linux_amd64_1.7.0.zip'
-wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/$aquatone
-unzip aquatone_linux_amd64_1.7.0.zip
-rm -rf README.md LICENSE.txt
-sudo mv aquatone /usr/local/bin 
-echo 'done'
-
-
-echo 'Installing Wpscan'
-sudo gem install wpscan
-echo 'done'
-
-
-echo 'Installing Dirsearch'
-git clone https://github.com/maurosoria/dirsearch.git
-echo 'done'
-
-
-echo 'Installing Massdns'
-git clone https://github.com/blechschmidt/massdns.git
-cd ~/tools/massdns
-make
-sudo cp ~/tools/massdns/bin/massdns /usr/local/bin/
-echo 'done'
-
-echo 'Installing Masscan'
-cd ~/tools
-git clone https://github.com/robertdavidgraham/masscan
-cd ~/tools/masscan
-make
-sudo cp ~/tools/masscan/bin/masscan /usr/local/bin/
-echo 'done'
-
-
-echo 'Downloading Seclists '
-cd ~/tools/
-git clone https://github.com/danielmiessler/SecLists.git
-cd ~/tools/SecLists/Discovery/DNS/
-## THIS FILE BREAKS MASSDNS AND NEEDS TO BE CLEANED
-cat dns-Jhaddix.txt | head -n -14 > clean-jhaddix-dns.txt
-echo 'done'
-
-
-echo 'Downloading bugprofile'
-cd ~
-wget https://raw.githubusercontent.com/com0t/bugprofile/main/.bugprofile -O .bugprofile
-echo 'done'
-
-echo 'Downloading Autobot-bb'
-cd ~
-git clone https://github.com/com0t/autobot-bb.git
-echo 'done'
-
-echo 'Remove install script'
-cd $pwd
-rm -rf install.sh
-echo 'done'
-
-# Active enviroment
-source ~/.bugprofile
+rm -f install.sh
