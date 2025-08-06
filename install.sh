@@ -98,10 +98,15 @@ if ! command -v go &>/dev/null; then
     rm -f "$FILE_GO" dl.html
     check_status "Cleaning up GoLang download files"
 
-    echo 'export GOROOT="/usr/local/go"' >> "$HOME/$SHELL_CONFIG"
-    echo 'export GOPATH="$HOME/go"' >> "$HOME/$SHELL_CONFIG"
-    echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> "$HOME/$SHELL_CONFIG"
-    check_status "Adding GoLang environment variables"
+    if ! grep -q 'export GOROOT="/usr/local/go"' "$HOME/$SHELL_CONFIG"; then
+        echo 'export GOROOT="/usr/local/go"' >> "$HOME/$SHELL_CONFIG"
+    fi
+    if ! grep -q 'export GOPATH="$HOME/go"' "$HOME/$SHELL_CONFIG"; then
+        echo 'export GOPATH="$HOME/go"' >> "$HOME/$SHELL_CONFIG"
+    fi
+    if ! grep -q 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' "$HOME/$SHELL_CONFIG"; then
+        echo 'export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"' >> "$HOME/$SHELL_CONFIG"
+    fi
     export GOROOT="/usr/local/go"
     export GOPATH="$HOME/go"
     export PATH="$PATH:$GOPATH/bin:$GOROOT/bin"
