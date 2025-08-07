@@ -359,14 +359,14 @@ else
     check_status "Gitleaks installation"
 fi
 
-# Cài đặt Gitrob
-if command -v gitrob &>/dev/null; then
-    echo "[+] Gitrob already installed"
-else
-    echo 'Installing Gitrob'
-    go install github.com/michenriksen/gitrob@latest &>/dev/null
-    check_status "Gitrob installation"
-fi
+# # Cài đặt Gitrob
+# if command -v gitrob &>/dev/null; then
+#     echo "[+] Gitrob already installed"
+# else
+#     echo 'Installing Gitrob'
+#     go install github.com/michenriksen/gitrob@latest &>/dev/null
+#     check_status "Gitrob installation"
+# fi
 
 # in ra thông tin cài đặt
 echo "Installation completed successfully!"
@@ -394,4 +394,4 @@ echo "- Massdns"
 echo "- Masscan"
 echo "- SecLists"
 echo "- Gitleaks"
-echo "- Gitrob"
+#echo "- Gitrob"
