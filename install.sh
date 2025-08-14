@@ -370,10 +370,6 @@ fi
 
 # in ra thông tin cài đặt
 echo "Installation completed successfully!"
-# In ra câu lệnh source tệp cấu hình shell
-echo "Please run the following command to apply changes:"
-echo "source $HOME/$SHELL_CONFIG"
-
 # In ra danh sách các công cụ đã cài đặt
 echo "Installed tools:"
 echo "- Nuclei"
@@ -395,3 +391,7 @@ echo "- Masscan"
 echo "- SecLists"
 echo "- Gitleaks"
 #echo "- Gitrob"
+
+# In ra câu lệnh source tệp cấu hình shell
+echo "Please run the following command to apply changes:"
+echo "source $HOME/$SHELL_CONFIG"
