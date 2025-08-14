@@ -257,7 +257,11 @@ else
     git clone https://github.com/maurosoria/dirsearch.git &>/dev/null
     check_status "Cloning Dirsearch repository"
     cd ~/tools/dirsearch
-    python3 -m pip install -r requirements.txt &>/dev/null
+    if python3 -c "import sys, pip; from packaging import version; sys.exit(0 if version.parse(pip.__version__) >= version.parse('23.3') else 1)"; then
+        python3 -m pip install -r requirements.txt --break-system-packages &>/dev/null
+    else
+        python3 -m pip install -r requirements.txt &>/dev/null
+    fi
     check_status "Installing Dirsearch requirements"
 fi
 # Kiểm tra nếu alias đã tồn tại
@@ -277,7 +281,11 @@ else
     git clone https://github.com/GerbenJavado/LinkFinder.git linkfinder &>/dev/null
     check_status "Cloning Linkfinder repository"
     cd ~/tools/linkfinder || { echo "[!] Failed to change to ~/tools/linkfinder"; exit 1; }
-    python3 -m pip install -r requirements.txt &>/dev/null
+    if python3 -c "import sys, pip; from packaging import version; sys.exit(0 if version.parse(pip.__version__) >= version.parse('23.3') else 1)"; then
+        python3 -m pip install -r requirements.txt --break-system-packages &>/dev/null
+    else
+        python3 -m pip install -r requirements.txt &>/dev/null
+    fi
     check_status "Installing Linkfinder requirements"
 fi
 # Kiểm tra nếu alias đã tồn tại
@@ -297,7 +305,11 @@ else
     git clone https://github.com/m4ll0k/SecretFinder.git secretfinder &>/dev/null
     check_status "Cloning SecretFinder repository"
     cd ~/tools/secretfinder || { echo "[!] Failed to change to ~/tools/secretfinder"; exit 1; }
-    python3 -m pip install -r requirements.txt &>/dev/null
+    if python3 -c "import sys, pip; from packaging import version; sys.exit(0 if version.parse(pip.__version__) >= version.parse('23.3') else 1)"; then
+        python3 -m pip install -r requirements.txt --break-system-packages &>/dev/null
+    else
+        python3 -m pip install -r requirements.txt &>/dev/null
+    fi
     check_status "Installing SecretFinder requirements"
 fi
 # Kiểm tra nếu alias đã tồn tại
