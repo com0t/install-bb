@@ -259,13 +259,13 @@ else
     cd ~/tools/dirsearch
     python3 -m pip install -r requirements.txt &>/dev/null
     check_status "Installing Dirsearch requirements"
-    # Kiểm tra nếu alias đã tồn tại
-    if grep -q "alias dirsearch=" "$HOME/$SHELL_CONFIG"; then
-        echo "[+] Dirsearch alias already exists"
-    else
-        echo 'alias dirsearch="python3 ~/tools/dirsearch/dirsearch.py "' >> "$HOME/$SHELL_CONFIG"
-        check_status "Adding Dirsearch alias to shell configuration"
-    fi
+fi
+# Kiểm tra nếu alias đã tồn tại
+if grep -q "alias dirsearch=" "$HOME/$SHELL_CONFIG"; then
+    echo "[+] Dirsearch alias already exists"
+else
+    echo 'alias dirsearch="python3 ~/tools/dirsearch/dirsearch.py "' >> "$HOME/$SHELL_CONFIG"
+    check_status "Adding Dirsearch alias to shell configuration"
 fi
 
 # Cài đặt Linkfinder
@@ -279,13 +279,13 @@ else
     cd ~/tools/linkfinder || { echo "[!] Failed to change to ~/tools/linkfinder"; exit 1; }
     python3 -m pip install -r requirements.txt &>/dev/null
     check_status "Installing Linkfinder requirements"
-    # Kiểm tra nếu alias đã tồn tại
-    if grep -q "alias linkfinder=" "$HOME/$SHELL_CONFIG"; then
-        echo "[+] Linkfinder alias already exists"
-    else
-        echo 'alias linkfinder="python3 ~/tools/linkfinder/linkfinder.py "' >> "$HOME/$SHELL_CONFIG"
-        check_status "Adding Linkfinder alias to shell configuration"
-    fi
+fi
+# Kiểm tra nếu alias đã tồn tại
+if grep -q "alias linkfinder=" "$HOME/$SHELL_CONFIG"; then
+    echo "[+] Linkfinder alias already exists"
+else
+    echo 'alias linkfinder="python3 ~/tools/linkfinder/linkfinder.py "' >> "$HOME/$SHELL_CONFIG"
+    check_status "Adding Linkfinder alias to shell configuration"
 fi
 
 # Cài đặt SecretFinder
@@ -299,13 +299,13 @@ else
     cd ~/tools/secretfinder || { echo "[!] Failed to change to ~/tools/secretfinder"; exit 1; }
     python3 -m pip install -r requirements.txt &>/dev/null
     check_status "Installing SecretFinder requirements"
-    # Kiểm tra nếu alias đã tồn tại
-    if grep -q "alias secretfinder=" "$HOME/$SHELL_CONFIG"; then
-        echo "[+] SecretFinder alias already exists"
-    else
-        echo 'alias secretfinder="python3 ~/tools/secretfinder/SecretFinder.py "' >> "$HOME/$SHELL_CONFIG"
-        check_status "Adding SecretFinder alias to shell configuration"
-    fi
+fi
+# Kiểm tra nếu alias đã tồn tại
+if grep -q "alias secretfinder=" "$HOME/$SHELL_CONFIG"; then
+    echo "[+] SecretFinder alias already exists"
+else
+    echo 'alias secretfinder="python3 ~/tools/secretfinder/SecretFinder.py "' >> "$HOME/$SHELL_CONFIG"
+    check_status "Adding SecretFinder alias to shell configuration"
 fi
 
 # Cài đặt Massdns
