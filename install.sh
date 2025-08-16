@@ -54,6 +54,7 @@ check_status "apt-get upgrade"
 
 sudo apt-get install -y jq python3-pip &>/dev/null
 check_status "jq and python3-pip installation"
+python3 -m pip install packaging
 
 # Cài đặt các gói cho wpscan
 sudo apt-get install -y curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ gcc libreadline6-dev libssl-dev libyaml-dev liblzma-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config ruby ruby-bundler ruby-dev libsqlite3-dev sqlite3 &>/dev/null
@@ -61,7 +62,7 @@ check_status "wpscan dependencies installation"
 
 # Cài đặt các công cụ
 sudo apt-get install -y sqlmap nmap &>/dev/null
-check_status "sqlmap, nmap, awscli installation"
+check_status "sqlmap, nmap installation"
 
 # Kiểm tra shell hiện tại
 case "$SHELL" in
