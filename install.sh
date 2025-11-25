@@ -1,4 +1,4 @@
-  #!/bin/bash
+#!/bin/bash
 
   # Hàm để in trạng thái thành công hoặc thất bại
   check_status() {
@@ -46,20 +46,25 @@
   fi
 
   # Cập nhật và cài đặt gói
+  echo "[+] Updating apt repositories..."
   sudo apt-get -y update &>/dev/null
   check_status "apt-get update"
 
+  echo "[+] Upgrading installed packages..."
   sudo apt-get -y upgrade &>/dev/null
   check_status "apt-get upgrade"
 
+  echo "[+] Installing jq, python3-pip and python3-packaging..."
   sudo apt-get install -y jq python3-pip python3-packaging &>/dev/null
   check_status "jq, python3-packaging and python3-pip installation"
 
   # Cài đặt các gói cho wpscan
+  echo "[+] Installing wpscan dependencies..."
   sudo apt-get install -y curl git libcurl4-openssl-dev make zlib1g-dev gawk g++ gcc libreadline6-dev libssl-dev libyaml-dev liblzma-dev autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config ruby ruby-bundler ruby-dev libsqlite3-dev sqlite3 &>/dev/null
   check_status "wpscan dependencies installation"
 
   # Cài đặt các công cụ
+  echo "[+] Installing sqlmap and nmap..."
   sudo apt-get install -y sqlmap nmap &>/dev/null
   check_status "sqlmap, nmap installation"
 
@@ -91,10 +96,13 @@
 
       FILE_GO="$(echo $filego|sed 's/\/dl\///g')"
       LINK_DOWNLOAD="https://golang.org$filego"
+      echo "[+] Downloading GoLang from $LINK_DOWNLOAD..."
       wget -q $LINK_DOWNLOAD 
       check_status "Downloading GoLang $LINK_DOWNLOAD"
+      echo "[+] Extracting GoLang archive $FILE_GO..."
       sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf $FILE_GO &>/dev/null
       check_status "Extracting GoLang $FILE_GO"
+      echo "[+] Cleaning up GoLang download files..."
       rm -f "$FILE_GO" dl.html
       check_status "Cleaning up GoLang download files"
 
@@ -119,6 +127,7 @@
   if [[ -d "$HOME/tools" ]]; then
       echo "[+] Tools directory already exists"
   else
+      echo "[+] Creating tools directory..."
       mkdir -p "$HOME/tools" &>/dev/null
       check_status "Creating tools directory"
   fi
@@ -229,12 +238,16 @@
   else
       echo 'Installing Aquatone'
       aquatone='aquatone_linux_amd64_1.7.0.zip'
+      echo "[+] Downloading Aquatone..."
       wget https://github.com/michenriksen/aquatone/releases/download/v1.7.0/$aquatone &>/dev/null
       check_status "Downloading Aquatone"
+      echo "[+] Unzipping Aquatone..."
       unzip "$aquatone" &>/dev/null
       check_status "Unzipping Aquatone"
+      echo "[+] Cleaning up Aquatone files..."
       rm -f README.md LICENSE.txt &>/dev/null
       check_status "Cleaning up Aquatone files"
+      echo "[+] Moving Aquatone to /usr/local/bin..."
       sudo mv aquatone /usr/local/bin/ &>/dev/null
       check_status "Moving Aquatone to /usr/local/bin"
   fi
@@ -257,6 +270,7 @@
       git clone https://github.com/maurosoria/dirsearch.git &>/dev/null
       check_status "Cloning Dirsearch repository"
       cd ~/tools/dirsearch
+      echo "[+] Installing Dirsearch Python requirements..."
       if python3 -c "import sys, pip; from packaging import version; sys.exit(0 if version.parse(pip.__version__) >= version.parse('23.3') else 1)"; then
           python3 -m pip install -r requirements.txt --break-system-packages &>/dev/null
       else
@@ -281,6 +295,7 @@
       git clone https://github.com/GerbenJavado/LinkFinder.git linkfinder &>/dev/null
       check_status "Cloning Linkfinder repository"
       cd ~/tools/linkfinder || { echo "[!] Failed to change to ~/tools/linkfinder"; exit 1; }
+      echo "[+] Installing Linkfinder Python requirements..."
       if python3 -c "import sys, pip; from packaging import version; sys.exit(0 if version.parse(pip.__version__) >= version.parse('23.3') else 1)"; then
           python3 -m pip install -r requirements.txt --break-system-packages &>/dev/null
       else
@@ -305,6 +320,7 @@
       git clone https://github.com/m4ll0k/SecretFinder.git secretfinder &>/dev/null
       check_status "Cloning SecretFinder repository"
       cd ~/tools/secretfinder || { echo "[!] Failed to change to ~/tools/secretfinder"; exit 1; }
+      echo "[+] Installing SecretFinder Python requirements..."
       if python3 -c "import sys, pip; from packaging import version; sys.exit(0 if version.parse(pip.__version__) >= version.parse('23.3') else 1)"; then
           python3 -m pip install -r requirements.txt --break-system-packages &>/dev/null
       else
@@ -329,8 +345,10 @@
       git clone https://github.com/blechschmidt/massdns.git &>/dev/null
       check_status "Cloning Massdns repository"
       cd ~/tools/massdns || { echo "[!] Failed to change to ~/tools/massdns"; exit 1; }
+      echo "[+] Building Massdns..."
       make &>/dev/null
       check_status "Building Massdns"
+      echo "[+] Installing Massdns to /usr/local/bin..."
       sudo cp ~/tools/massdns/bin/massdns /usr/local/bin/ &>/dev/null
       check_status "Installing Massdns to /usr/local/bin"
   fi
@@ -344,8 +362,10 @@
       git clone https://github.com/robertdavidgraham/masscan &>/dev/null
       check_status "Cloning Masscan repository"
       cd ~/tools/masscan || { echo "[!] Failed to change to ~/tools/masscan"; exit 1; }
+      echo "[+] Building Masscan..."
       make &>/dev/null
       check_status "Building Masscan"
+      echo "[+] Installing Masscan to /usr/local/bin..."
       sudo cp ~/tools/masscan/bin/masscan /usr/local/bin/ &>/dev/null
       check_status "Installing Masscan to /usr/local/bin"
   fi
