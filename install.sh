@@ -427,4 +427,4 @@
 
   # In ra câu lệnh source tệp cấu hình shell
   echo "Please run the following command to apply changes:"
-  echo -e "\033[1;36msource \$HOME/\$SHELL_CONFIG\033[0m"
+  echo -e "\033[1;36msource $HOME/$SHELL_CONFIG\033[0m"
